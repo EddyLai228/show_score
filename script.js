@@ -1,10 +1,9 @@
 // Four-corner Slot-Machine Score System
 // ==========================================================
 
-const DIGITS = 5;                
-const SPIN_DURATION = 1000;       
+const DIGITS = 4;                
+const COUNT_UP_DURATION = 5000;   // 5秒从0递增到目标分数
 const SPIN_INTERVAL = 60;        
-const STOP_DELAY_STEP = 500;
 
 // Store target scores for each display
 const targetScores = {
@@ -47,54 +46,53 @@ function initDigits(displayId) {
   }
 }
 
-function spinDigit(card, stopDigit, delay) {
-  const front = card.querySelector('.front');
-  const back = card.querySelector('.back');
+// Update display to show a number
+function updateDisplay(displayId, number) {
+  const str = number.toString().padStart(DIGITS, '0');
+  const display = document.getElementById(displayId);
+  const cards = display.querySelectorAll('.digit-card .card .front');
+  
+  cards.forEach((card, index) => {
+    card.textContent = str[index];
+  });
+}
 
-  let spinning = true;
-
-  const interval = setInterval(() => {
-    if (!spinning) return;
-    const rand = Math.floor(Math.random() * 10);
-    front.textContent = rand;
-  }, SPIN_INTERVAL);
-
-  setTimeout(() => {
-    spinning = false;
-    clearInterval(interval);
-
-    back.textContent = stopDigit;
-    card.classList.add('flip');
-
-    card.addEventListener(
-      'transitionend',
-      () => {
-        front.textContent = stopDigit;
-        card.classList.remove('flip');
-        card.classList.add('jump');
-        setTimeout(() => card.classList.remove('jump'), 200);
-      },
-      { once: true }
-    );
-  }, delay);
+// Animate score: count from 0, incrementing by 1 each step
+// Fast at start, slow down as approaching target
+function animateScore(displayId, targetNumber) {
+  const display = document.getElementById(displayId);
+  let currentNumber = 0;
+  const startTime = Date.now();
+  const duration = 10000; // 10 seconds total
+  
+  const countInterval = setInterval(() => {
+    const elapsed = Date.now() - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // Calculate target number at this moment using easing
+    // Fast at beginning, slow at end
+    const easeOutCubic = 1 - Math.pow(1 - progress, 3);
+    const targetAtThisMoment = Math.floor(targetNumber * easeOutCubic);
+    
+    // Increment towards the target position smoothly
+    if (currentNumber < targetAtThisMoment) {
+      const remaining = targetAtThisMoment - currentNumber;
+      // Adjust increment based on how far we are from intermediate target
+      const increment = Math.max(1, Math.ceil(remaining / 10));
+      currentNumber = Math.min(currentNumber + increment, targetAtThisMoment);
+    }
+    
+    updateDisplay(displayId, currentNumber);
+    
+    if (progress >= 1 || currentNumber >= targetNumber) {
+      clearInterval(countInterval);
+      updateDisplay(displayId, targetNumber);
+    }
+  }, 30);
 }
 
 function spinToNumber(displayId, num) {
-  const str = num.toString().padStart(DIGITS, '0');
-  const display = document.getElementById(displayId);
-  const cards = display.querySelectorAll('.digit-card .card');
-
-  // Right to left stopping: ones digit stops first
-  for (let i = 0; i < DIGITS; i++) {
-    const indexFromRight = DIGITS - 1 - i;
-    const delay = SPIN_DURATION + i * STOP_DELAY_STEP;
-    spinDigit(cards[indexFromRight], str[indexFromRight], delay);
-  }
-}
-
-function randomScore(displayId) {
-  const randomNum = Math.floor(Math.random() * 100000);
-  spinToNumber(displayId, randomNum);
+  animateScore(displayId, num);
 }
 
 // Initialize all four displays
@@ -112,19 +110,12 @@ document.getElementById('centerStartBtn').addEventListener('click', () => {
   });
 });
 
-// ========== 直接設定分數的功能 ==========
-// 使用方式：
-// setScore('score1', 12345);  // 設定左上角分數為 12345（按開始後才會顯示）
-// setScore('score2', 98765);  // 設定右上角分數為 98765（按開始後才會顯示）
-// setScore('score3', 50000);  // 設定左下角分數為 50000（按開始後才會顯示）
-// setScore('score4', 77777);  // 設定右下角分數為 77777（按開始後才會顯示）
-
 function setScore(displayId, number) {
   targetScores[displayId] = number;
 }
 
 // 範例：設定各個角落的目標分數
-setScore('score1', 12345); // 設定左上角分數為 12345
-setScore('score2', 98765); // 設定右上角分數為 98765
-setScore('score3', 20000); // 設定左下角分數為 50000
-setScore('score4', 77777); // 設定右下角分數為 77777
+setScore('score1', 8888); // 設定左上角分數為 8888
+setScore('score2', 7777); // 設定右上角分數為 7777
+setScore('score3', 8123); // 設定左下角分數為 8123
+setScore('score4', 8234); // 設定右下角分數為 8234
