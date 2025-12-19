@@ -103,13 +103,10 @@ initDigits('score2');
 initDigits('score3');
 initDigits('score4');
 
-// Add click listeners to all start buttons
-const corners = document.querySelectorAll('.score-corner');
-corners.forEach((corner, index) => {
-  const btn = corner.querySelector('.start-btn');
-  const scoreId = `score${index + 1}`;
-  btn.addEventListener('click', () => {
-    // Use target score if set, otherwise use random
+// Add click listener to center start button
+document.getElementById('centerStartBtn').addEventListener('click', () => {
+  // Trigger all four scores
+  ['score1', 'score2', 'score3', 'score4'].forEach(scoreId => {
     const score = targetScores[scoreId] || Math.floor(Math.random() * 100000);
     spinToNumber(scoreId, score);
   });
@@ -129,5 +126,5 @@ function setScore(displayId, number) {
 // 範例：設定各個角落的目標分數
 setScore('score1', 12345); // 設定左上角分數為 12345
 setScore('score2', 98765); // 設定右上角分數為 98765
-setScore('score3', 50000); // 設定左下角分數為 50000
+setScore('score3', 20000); // 設定左下角分數為 50000
 setScore('score4', 77777); // 設定右下角分數為 77777
