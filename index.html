@@ -3,18 +3,38 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>五位數分數顯示 Demo</title>
+  <title>四角分數顯示 Demo</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="panel">
-    <div id="scoreDisplay"></div>
-
-    <!-- 把 controls 移進 panel 裡面 -->
-    <div class="controls">
-      <button id="startBtn">開始</button>
-    </div>
+  <!-- 左上角 -->
+  <div class="score-corner corner-top-left">
+    <div class="name-tag">無距小家</div>
+    <div class="score-display" id="score1"></div>
+    <button class="start-btn">開始</button>
   </div>
+
+  <!-- 右上角 -->
+  <div class="score-corner corner-top-right">
+    <div class="name-tag">友實小家</div>
+    <div class="score-display" id="score2"></div>
+    <button class="start-btn">開始</button>
+  </div>
+
+  <!-- 左下角 -->
+  <div class="score-corner corner-bottom-left">
+    <div class="name-tag">發達小家</div>
+    <div class="score-display" id="score3"></div>
+    <button class="start-btn">開始</button>
+  </div>
+
+  <!-- 右下角 -->
+  <div class="score-corner corner-bottom-right">
+    <div class="name-tag">誠潔小家</div>
+    <div class="score-display" id="score4"></div>
+    <button class="start-btn">開始</button>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>

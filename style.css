@@ -6,10 +6,8 @@ body {
     "Helvetica Neue", Arial, sans-serif;
   background: #1b0f16 url("background.png") center bottom / cover no-repeat;
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 120px;
+  position: relative;
+  overflow: hidden;
 }
 
 body::before {
@@ -24,34 +22,69 @@ body::before {
   z-index: -1;
 }
 
-/* Main white panel */
-.panel {
+/* Score corner container */
+.score-corner {
+  position: fixed;
   background: rgba(255, 255, 255, 0.15);
-  padding: 60px 50px;     /* 👈 上下 padding 加大 */
+  padding: 25px 45px;
   border-radius: 24px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-  text-align: center;
-  max-width: 640px;
-  width: 90%;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  margin: 0 auto;   /* ⭐ 水平置中 */
-  position: relative;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  align-items: center;
+  width: 46%;
 }
 
+.corner-top-left {
+  top: 2%;
+  left: 2%;
+}
 
-/* Score container (holds digit cards and separators) */
-#scoreDisplay {
-  display: inline-flex;
-  gap: 10px;
-  margin-bottom: 20px;
+.corner-top-right {
+  top: 2%;
+  right: 2%;
+}
+
+.corner-bottom-left {
+  bottom: 2%;
+  left: 2%;
+}
+
+.corner-bottom-right {
+  bottom: 2%;
+  right: 2%;
+}
+
+/* Name tag display */
+.name-tag {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 40px;
+  text-align: center;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Score container */
+.score-display {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
 }
 
 /* Slot-machine digit card */
 .digit-card {
-  width: 80px;
-  height: 120px;
+  width: 95px;
+  height: 140px;
   perspective: 900px;
   display: inline-flex;
   position: relative;
@@ -82,12 +115,13 @@ body::before {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 52px;
+  font-size: 64px;
   border-radius: 10px;
   backface-visibility: hidden;
   color: #0b1220;
   background: #ffffff;
   font-family: "SFMono-Regular", Menlo, Monaco, monospace;
+  font-weight: bold;
 }
 
 .digit-card .back {
@@ -113,54 +147,37 @@ body::before {
 /* Slot separators */
 .slot-separator {
   width: 6px;
-  height: 120px;
+  height: 140px;
   background: linear-gradient(#00000055, #ffffff55);
   margin: 0 6px;
   border-radius: 4px;
 }
 
-/* Controls */
-.controls {
-  position: absolute;
-  top: 100%;                 
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: 20px;          /* panel 底下的距離，可以調整 */
-  display: flex;
-  justify-content: center;
+/* Start button for each corner */
+.start-btn {
   width: 100%;
-}
-
-
-/* 大大金色遊戲機按鈕 */
-.controls button {
-  padding: 18px 40px;
-  font-size: 24px;
+  padding: 16px 32px;
+  font-size: 30px;
   font-weight: bold;
   border: none;
-  border-radius: 50px;
-
+  border-radius: 30px;
   background: linear-gradient(145deg, #f7e27a, #e0c04f, #b9962d);
   color: #4d2d00;
-
   box-shadow:
-    0 6px 0 #8c6a1a,         /* 上方立體邊 */
-    0 10px 20px rgba(0,0,0,0.35);  /* 外部陰影 */
-  
+    0 5px 0 #8c6a1a,
+    0 10px 20px rgba(0,0,0,0.35);
   cursor: pointer;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
-/* hover：整顆按鈕變亮 */
-.controls button:hover {
+.start-btn:hover {
   background: linear-gradient(145deg, #ffef9d, #e8ca54, #cda630);
 }
 
-/* active：按下去的立體下壓動畫 */
-.controls button:active {
-  transform: translateY(6px);
+.start-btn:active {
+  transform: translateY(5px);
   box-shadow:
     0 2px 0 #8c6a1a,
-    0 6px 12px rgba(0,0,0,0.3);
+    0 5px 12px rgba(0,0,0,0.3);
 }
 

@@ -1,15 +1,22 @@
-// Slot-Machine Spin Animation + Flip System
+// Four-corner Slot-Machine Score System
 // ==========================================================
-// Adds: spinning → slowing down → stopping → flip
-// Now digits stop from RIGHT → LEFT (ones first → highest digit last)
 
 const DIGITS = 5;                
 const SPIN_DURATION = 1000;       
 const SPIN_INTERVAL = 60;        
-const STOP_DELAY_STEP = 700;     
+const STOP_DELAY_STEP = 500;
 
-function initDigits() {
-  const display = document.getElementById('scoreDisplay');
+// Store target scores for each display
+const targetScores = {
+  'score1': 0,
+  'score2': 0,
+  'score3': 0,
+  'score4': 0
+};     
+
+// Initialize digits for a specific display
+function initDigits(displayId) {
+  const display = document.getElementById(displayId);
   display.innerHTML = '';
 
   for (let i = 0; i < DIGITS; i++) {
@@ -72,23 +79,55 @@ function spinDigit(card, stopDigit, delay) {
   }, delay);
 }
 
-function spinToNumber(num) {
+function spinToNumber(displayId, num) {
   const str = num.toString().padStart(DIGITS, '0');
-  const cards = document.querySelectorAll('.digit-card .card');
+  const display = document.getElementById(displayId);
+  const cards = display.querySelectorAll('.digit-card .card');
 
-  // ❗ 右 → 左 停法：個位數先停
+  // Right to left stopping: ones digit stops first
   for (let i = 0; i < DIGITS; i++) {
-    const indexFromRight = DIGITS - 1 - i; // 4,3,2,1,0
+    const indexFromRight = DIGITS - 1 - i;
     const delay = SPIN_DURATION + i * STOP_DELAY_STEP;
     spinDigit(cards[indexFromRight], str[indexFromRight], delay);
   }
 }
 
-function randomScore() {
-  const v = 12345;
-  spinToNumber(v);
+function randomScore(displayId) {
+  const randomNum = Math.floor(Math.random() * 100000);
+  spinToNumber(displayId, randomNum);
 }
 
-document.getElementById('startBtn').addEventListener('click', randomScore);
+// Initialize all four displays
+initDigits('score1');
+initDigits('score2');
+initDigits('score3');
+initDigits('score4');
 
-initDigits();
+// Add click listeners to all start buttons
+const corners = document.querySelectorAll('.score-corner');
+corners.forEach((corner, index) => {
+  const btn = corner.querySelector('.start-btn');
+  const scoreId = `score${index + 1}`;
+  btn.addEventListener('click', () => {
+    // Use target score if set, otherwise use random
+    const score = targetScores[scoreId] || Math.floor(Math.random() * 100000);
+    spinToNumber(scoreId, score);
+  });
+});
+
+// ========== 直接設定分數的功能 ==========
+// 使用方式：
+// setScore('score1', 12345);  // 設定左上角分數為 12345（按開始後才會顯示）
+// setScore('score2', 98765);  // 設定右上角分數為 98765（按開始後才會顯示）
+// setScore('score3', 50000);  // 設定左下角分數為 50000（按開始後才會顯示）
+// setScore('score4', 77777);  // 設定右下角分數為 77777（按開始後才會顯示）
+
+function setScore(displayId, number) {
+  targetScores[displayId] = number;
+}
+
+// 範例：設定各個角落的目標分數
+setScore('score1', 12345);
+setScore('score2', 98765);
+setScore('score3', 50000);
+setScore('score4', 77777);
