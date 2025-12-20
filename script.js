@@ -115,7 +115,7 @@ function setScore(displayId, number) {
 }
 
 // 範例：設定各個角落的目標分數
-setScore('score1', 8888); // 設定左上角分數為 8888
-setScore('score2', 7777); // 設定右上角分數為 7777
-setScore('score3', 8123); // 設定左下角分數為 8123
-setScore('score4', 8234); // 設定右下角分數為 8234
+setScore('score1', 5280); // 設定左上角分數為 5280 無距
+setScore('score2', 5090); // 設定右上角分數為 5090 友實
+setScore('score3', 5020); // 設定左下角分數為 5020 發達
+setScore('score4', 5000); // 設定右下角分數為 4260 誠潔
